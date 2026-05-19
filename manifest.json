@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "BeatChart - بیٹ چارٹ",
+    "version": "2.0",
+    "description": "A modern Chrome extension to quickly search for beat chart information with dark mode, clipboard copy, and export features.",
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "Icons/icon16.png",
+            "48": "Icons/icon48.png",
+            "128": "Icons/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "Icons/icon16.png",
+        "48": "Icons/icon48.png",
+        "128": "Icons/icon128.png"
+    },
+    "permissions": [
+        "clipboardWrite"
+    ],
+    "optional_permissions": [
+        "storage"
+    ]
+}
