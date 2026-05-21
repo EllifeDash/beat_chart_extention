@@ -1,17 +1,22 @@
 # BeatChart - بیٹ چارٹ
 
-A modern Chrome extension for quickly searching and viewing police beat chart information in Urdu.
+A modern Chrome extension for managing police beat chart information in Urdu with full CRUD capabilities.
 
 ## Features
 
-- **Smart Search**: Search by village name, beat, or officer with debounced input for smooth performance
-- **Filter Tabs**: Quickly filter results by All, Beat, Officers, or Villages
+- **CRUD Operations**: Create, read, update, and delete beat entries directly from the popup
+- **Smart Search**: Search by village name, beat, or officer with real-time filtering
+- **Filter Tabs**: Dedicated views for All, Beats, Officers, or Villages
+  - **سب (All)**: Full beat cards with officers and villages
+  - **بیٹ (Beat)**: Simple list of beat names with counts
+  - **افسران (Officers)**: Flat list of all officers with name, beat, phone, and CNIC
+  - **گاؤں (Villages)**: Flat list of all villages with parent beat
 - **Dark Mode**: Toggle between light and dark themes (auto-detects system preference)
-- **Copy to Clipboard**: One-click copy of beat information with visual feedback
-- **Recent Searches**: Access your recent searches with clickable tags
-- **Search Highlighting**: Matching villages are highlighted in search results
-- **Export Data**: Download filtered or complete beat chart data as JSON
-- **Responsive Design**: Clean card-based UI optimized for popup window
+- **Copy to Clipboard**: One-click copy of officer info with visual feedback
+- **Search Highlighting**: Matching terms are highlighted in search results
+- **Import/Export**: Import JSON data (merge or overwrite) and export filtered or complete data
+- **Persistent Storage**: All data saved to `chrome.storage.local`
+- **Responsive Design**: Clean UI optimized for extension popup window
 
 ## Installation
 
@@ -32,26 +37,42 @@ A modern Chrome extension for quickly searching and viewing police beat chart in
 
 ## Usage
 
+### Viewing Data
+
 1. Click the BeatChart icon in your browser toolbar to open the popup
-2. Use the search bar to find villages, beats, or officers
-3. Use filter tabs to narrow your search scope
-4. Click the **کاپی** (Copy) button on any beat card to copy information
-5. Click **ایکسپورٹ** (Export) to download data as JSON
-6. Toggle dark mode with the moon icon in the header
+2. Use the search bar to filter results
+3. Switch between filter tabs for different views:
+   - **سب**: Full cards with all details
+   - **بیٹ**: Quick list of beats
+   - **افسران**: Officer directory with copy support
+   - **گاؤں**: Village list with beat references
 
-## Keyboard Shortcuts
+### Managing Data
 
-- **Escape**: Clear search and reset view
+- **Add Beat**: Click the `+` button in the header to open the create form
+  - Enter beat name
+  - Add officers with name, phone, and CNIC fields
+  - Add villages one by one
+  - Click **محفوظ کریں** (Save) to persist
+- **Edit Beat**: Click the edit icon (pencil) on any entry to modify
+- **Delete Beat**: Click the delete icon (trash) and confirm removal
+- **Import**: Click **امپورٹ** (Import) in footer to load a JSON file
+  - If data exists, choose **OK** to merge or **Cancel** to overwrite
+- **Export**: Click **ایکسپورٹ** (Export) to download current view as JSON
+
+### Keyboard Shortcuts
+
+- **Escape**: Clear search or close modal
 
 ## File Structure
 
 ```
 beat_chart_extention/
 ├── manifest.json          # Extension configuration (Manifest V3)
-├── popup.html             # Main popup interface
-├── popup.css              # Styles with dark mode support
-├── popup.js               # Application logic (ES6 class-based)
-├── beat_chart.json        # Beat chart data (Urdu)
+├── popup.html             # Main popup interface with modal
+├── popup.css              # Styles with dark mode and modal support
+├── popup.js               # Application logic with CRUD operations
+├── beat_chart.json        # Initial seed data (Urdu)
 └── Icons/
     ├── icon16.png
     ├── icon48.png
@@ -60,23 +81,47 @@ beat_chart_extention/
 
 ## Data Format
 
-The `beat_chart.json` file contains an array of beat objects:
+### Stored Format
+
+Data in `chrome.storage.local` uses structured officer objects:
 
 ```json
 [
   {
     "beat": "بیٹ نام",
-    "officers": ["افسر 1", "افسر 2"],
+    "officers": [
+      {
+        "name": "افسر کا نام",
+        "contact": "03001234567",
+        "cnic": "35201-1234567-1"
+      }
+    ],
     "village": ["گاؤں 1", "گاؤں 2"]
   }
 ]
 ```
 
+### Seed Data Format
+
+The `beat_chart.json` file supports both string and object officer formats for backward compatibility:
+
+```json
+[
+  {
+    "beat": "بیٹ نام",
+    "officers": ["افسر 1", "افسر 2 - 03001234567 - 35201-1234567-1"],
+    "village": ["گاؤں 1", "گاؤں 2"]
+  }
+]
+```
+
+String officers are automatically parsed into name/contact/CNIC on first load.
+
 ## Technical Details
 
 - **Manifest Version**: 3
-- **Permissions**: `clipboardWrite` (for copy functionality)
-- **Storage**: Uses `localStorage` for theme preference and recent searches
+- **Permissions**: `storage` (for persistent data and theme)
+- **Storage**: Uses `chrome.storage.local` for all beat data and theme preference
 - **No external dependencies**: Pure HTML, CSS, and JavaScript
 
 ## Browser Support

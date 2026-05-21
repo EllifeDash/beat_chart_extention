@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beat Chart - بیٹ چارٹ</title>
+    <title>BeatChart - بیٹ چارٹ</title>
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -11,6 +11,11 @@
         <header class="app-header">
             <h1>بیٹ چارٹ</h1>
             <div class="header-controls">
+                <button id="addBeatBtn" class="icon-btn" title="نیا بیٹ شامل کریں" aria-label="Add beat">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </button>
                 <button id="themeToggle" class="icon-btn" title="تھیم تبدیل کریں" aria-label="Toggle theme">
                     <svg class="theme-icon" viewBox="0 0 24 24" width="20" height="20">
                         <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/>
@@ -62,21 +67,75 @@
 
         <main id="resultsContainer" class="results-container" role="main"></main>
 
-        <div class="recent-searches" id="recentSearches">
-            <h3>حالیہ تلاش</h3>
-            <div class="recent-tags" id="recentTags"></div>
-        </div>
-
         <footer class="app-footer">
-            <button id="exportBtn" class="footer-btn">
-                <svg viewBox="0 0 24 24" width="16" height="16">
-                    <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
-                </svg>
-                ایکسپورٹ
-            </button>
+            <div class="footer-actions">
+                <button id="exportBtn" class="footer-btn">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
+                    ایکسپورٹ
+                </button>
+                <button id="importBtn" class="footer-btn">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                    </svg>
+                    امپورٹ
+                </button>
+                <input type="file" id="importFileInput" accept=".json" class="hidden">
+            </div>
             <span id="resultCount" class="result-count"></span>
         </footer>
     </div>
-    <script src="popup.js" type="module"></script>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+        <div class="modal" role="dialog" aria-modal="true">
+            <div class="modal-header">
+                <h2 id="modalTitle">نیا بیٹ شامل کریں</h2>
+                <button id="modalClose" class="modal-close" aria-label="Close">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="beatForm">
+                    <input type="hidden" id="editIndex" value="-1">
+
+                    <div class="form-group">
+                        <label for="beatName">بیٹ کا نام</label>
+                        <input type="text" id="beatName" required placeholder="بیٹ نام درج کریں">
+                    </div>
+
+                    <div class="form-group">
+                        <label>افسران</label>
+                        <div id="officersContainer" class="dynamic-list"></div>
+                        <button type="button" id="addOfficerBtn" class="add-item-btn">
+                            <svg viewBox="0 0 24 24" width="14" height="14">
+                                <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            افسر شامل کریں
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>گاؤں</label>
+                        <div id="villagesContainer" class="dynamic-list"></div>
+                        <button type="button" id="addVillageBtn" class="add-item-btn">
+                            <svg viewBox="0 0 24 24" width="14" height="14">
+                                <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            گاؤں شامل کریں
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelModalBtn" class="btn btn-secondary">منسوخ</button>
+                <button type="button" id="saveModalBtn" class="btn btn-primary">محفوظ کریں</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
 </body>
 </html>

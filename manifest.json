@@ -17,9 +17,6 @@
         "128": "Icons/icon128.png"
     },
     "permissions": [
-        "clipboardWrite"
-    ],
-    "optional_permissions": [
         "storage"
     ]
 }
